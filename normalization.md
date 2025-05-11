@@ -1,10 +1,5 @@
-# normalization.md
 
-# Objective
-
-Apply normalization principles to ensure the Airbnb-style database schema is in Third Normal Form (3NF). This document reviews the existing design, identifies any normalization issues, and explains the steps taken to achieve 3NF.
-
----
+# Database Normalisation Report
 
 ## 1. Overview of Current Schema
 
@@ -23,30 +18,20 @@ All primary keys are single-attribute UUIDs. Relationships are enforced via fore
 
 ## 2. First Normal Form (1NF)
 
-**Rule:** Each table cell must contain atomic (indivisible) values, and each record must be unique.
-
 * All columns store single, atomic values (e.g., `email` is a single string; `start_date` is a single date).
 * No repeating groups or arrays in any attribute.
 * Each table has a primary key (`*_id`) ensuring row-level uniqueness.
-
-**Conclusion:** Schema complies with 1NF.
 
 ---
 
 ## 3. Second Normal Form (2NF)
 
-**Rule:** Must first satisfy 1NF, and every non-key attribute must depend on the whole (composite) primary key.
-
 * All tables use a single-attribute primary key (UUID). There are no composite keys, so partial dependencies cannot occur.
 * Every non-key attribute in each table depends directly on the table’s primary key.
-
-**Conclusion:** Schema complies with 2NF by design (no composite keys employed).
 
 ---
 
 ## 4. Third Normal Form (3NF)
-
-**Rule:** Must satisfy 2NF, and no non-key attribute may depend on another non-key attribute (no transitive dependencies).
 
 * **USERS**: All attributes (`first_name`, `last_name`, `email`, `password_hash`, `phone_number`, `role`, `created_at`) describe the user and depend solely on `user_id`. No attribute depends on another non-key attribute.
 * **PROPERTIES**: Attributes (`name`, `description`, `location`, `price_per_night`, `created_at`, `updated_at`) depend only on `property_id`. The `host_id` foreign key references the user but is not used to derive other fields.
