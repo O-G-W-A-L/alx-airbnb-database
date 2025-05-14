@@ -13,3 +13,19 @@ CREATE INDEX idx_booking_booking_date ON booking (booking_date);
 -- Indexes for properties table
 CREATE INDEX idx_properties_host_id ON properties (host_id);
 CREATE INDEX idx_properties_location ON properties (location);
+
+
+--Before Indexing:**
+
+EXPLAIN ANALYZE
+SELECT * FROM booking WHERE user_id = 1;
+
+/**Result:
+
+Seq Scan on booking  (cost=0.00..100.00 rows=10 width=100)
+  Filter: (user_id = 1)
+**/
+--After Indexing:
+
+EXPLAIN ANALYZE
+SELECT * FROM booking WHERE user_id = 1;
