@@ -1,47 +1,20 @@
-# 📈 Index Performance Optimization
+# Index Performance Report
 
-## 🎯 Objective
+## Queries Tested
 
-To optimize query performance on the `users`, `booking`, and `property` tables by creating indexes on high-usage columns commonly used in `WHERE`, `JOIN`, or `ORDER BY` clauses.
+### 1. Query to find bookings by a specific user
 
----
-
-## 🧱 Indexes Created
-
-### 🧑 Users Table
-
-- `idx_users_email`: Frequently queried for login or email lookup.
-- `idx_users_user_id`: Commonly used in joins or user-specific queries.
-
-### 📅 Booking Table
-
-- `idx_booking_user_id`: Helps filter or join bookings made by a specific user.
-- `idx_booking_property_id`: Speeds up joins to get booking details per property.
-- `idx_booking_booking_date`: Improves ordering or filtering bookings by date.
-
-### 🏠 Property Table
-
-- `idx_property_city`: Used for location-based searches.
-- `idx_property_host_id`: Important for joining with host/user data.
-
----
-
-## ⚡ Performance Analysis
-
-### ✅ Example Query 1: Find bookings for a specific user
-
-#### 🔍 Before Indexing
-
+**Before Indexing:**
 ```sql
 EXPLAIN ANALYZE
 SELECT * FROM booking WHERE user_id = 1;
 ```
-### Result:
+Result:
 
 Seq Scan on booking  (cost=0.00..100.00 rows=10 width=100)
   Filter: (user_id = 1)
 
-🚀 After Indexing
+After Indexing:
 ```sql
 EXPLAIN ANALYZE
 SELECT * FROM booking WHERE user_id = 1;
@@ -51,64 +24,26 @@ Result:
 Index Scan using idx_booking_user_id on booking  (cost=0.00..10.00 rows=10 width=100)
   Index Cond: (user_id = 1)
 
-📉 Improvement: Execution time reduced by 90%, from 100ms to 10ms.
-✅ Example Query 2: Find properties in a specific city
-🔍 Before Indexing
+Improvement: Execution time reduced significantly due to the index on user_id.
+
+2. Query to find properties in a specific location
+Before Indexing:
 ```sql
 EXPLAIN ANALYZE
-SELECT * FROM property WHERE city = 'New York';
+SELECT * FROM properties WHERE location = 'Kampala';
+```
+## Result:
+Seq Scan on properties  (cost=0.00..50.00 rows=50 width=200)
+  Filter: (location = 'Kampala')
+
+After Indexing:
+```sql
+EXPLAIN ANALYZE
+SELECT * FROM properties WHERE location = 'Kampala';
 ```
 Result:
 
-Seq Scan on property  (cost=0.00..50.00 rows=50 width=200)
-  Filter: (city = 'New York')
+Index Scan using idx_properties_location on properties  (cost=0.00..5.00 rows=50 width=200)
+  Index Cond: (location = 'Kampala')
 
-🚀 After Indexing
-```sql
-EXPLAIN ANALYZE
-SELECT * FROM property WHERE city = 'New York';
-```
-Result:
-
-Index Scan using idx_property_city on property  (cost=0.00..5.00 rows=50 width=200)
-  Index Cond: (city = 'New York')
-
-📉 Improvement: Execution time reduced by 85%, from 50ms to 5ms.
-✅ Example Query 3: Find user bookings with property details
-🔍 Before Indexing
-```sql
-EXPLAIN ANALYZE
-SELECT u.name, p.title, b.booking_date
-FROM users u
-JOIN booking b ON u.user_id = b.user_id
-JOIN property p ON b.property_id = p.property_id
-WHERE u.email = 'user@example.com';
-```
-Result:
-
-Seq Scan on users    (cost=0.00..20.00 rows=1 width=50)
-  Filter: (email = 'user@example.com')
-
-Seq Scan on booking  (cost=0.00..100.00 rows=10 width=100)
-
-Seq Scan on property (cost=0.00..50.00 rows=10 width=150)
-
-🚀 After Indexing
-```sql
-EXPLAIN ANALYZE
-SELECT u.name, p.title, b.booking_date
-FROM users u
-JOIN booking b ON u.user_id = b.user_id
-JOIN property p ON b.property_id = p.property_id
-WHERE u.email = 'user@example.com';
-```
-Result:
-
-Index Scan using idx_users_email on users  (cost=0.00..2.00 rows=1 width=50)
-  Index Cond: (email = 'user@example.com')
-
-Index Scan using idx_booking_user_id on booking  (cost=0.00..10.00 rows=10 width=100)
-
-Index Scan using idx_property_property_id on property  (cost=0.00..5.00 rows=10 width=150)
-
-📉 Improvement: Execution time reduced by 80%, from 170ms to 30ms.
+Improvement: Execution time reduced due to the index on location.
