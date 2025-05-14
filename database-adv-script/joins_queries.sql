@@ -19,7 +19,7 @@ p.title,
 r.review_id,
 r.rating,
 r.comment,
-FROM properties p
+FROM properties p ORDER BY p.property_id
 LEFT JOIN reviews r
 ON p.property_id = r.property_id;
 
