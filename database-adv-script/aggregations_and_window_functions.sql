@@ -15,4 +15,4 @@ FROM (
     SELECT property_id, COUNT(*) AS total_bookings
     FROM booking
     GROUP BY property_id
-) AS subquery;
+) AS property_stats;
