@@ -9,7 +9,7 @@ GROUP BY user_id;
 -- This query retrieves the property_id and the total number of bookings for each property.
 
 SELECT property_id, COUNT(*) AS total_bookings,
-       RANK() OVER (ORDER BY COUNT(*) DESC) AS booking_rank
+       ROW_NUMBER(), RANK() OVER (ORDER BY COUNT(*) DESC) AS booking_rank
 
 FROM booking
 GROUP BY property_id;
