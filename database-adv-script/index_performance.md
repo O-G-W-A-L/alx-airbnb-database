@@ -33,7 +33,7 @@ To optimize query performance on the `users`, `booking`, and `property` tables b
 #### 🔍 Before Indexing
 
 ```sql
-### EXPLAIN ANALYZE
+EXPLAIN ANALYZE
 SELECT * FROM booking WHERE user_id = 1;
 ```
 ### Result:
@@ -42,8 +42,7 @@ Seq Scan on booking  (cost=0.00..100.00 rows=10 width=100)
   Filter: (user_id = 1)
 
 🚀 After Indexing
-
-```
+```sql
 EXPLAIN ANALYZE
 SELECT * FROM booking WHERE user_id = 1;
 ```
@@ -55,7 +54,7 @@ Index Scan using idx_booking_user_id on booking  (cost=0.00..10.00 rows=10 width
 📉 Improvement: Execution time reduced by 90%, from 100ms to 10ms.
 ✅ Example Query 2: Find properties in a specific city
 🔍 Before Indexing
-```
+```sql
 EXPLAIN ANALYZE
 SELECT * FROM property WHERE city = 'New York';
 ```
@@ -65,7 +64,7 @@ Seq Scan on property  (cost=0.00..50.00 rows=50 width=200)
   Filter: (city = 'New York')
 
 🚀 After Indexing
-```
+```sql
 EXPLAIN ANALYZE
 SELECT * FROM property WHERE city = 'New York';
 ```
@@ -77,14 +76,14 @@ Index Scan using idx_property_city on property  (cost=0.00..5.00 rows=50 width=2
 📉 Improvement: Execution time reduced by 85%, from 50ms to 5ms.
 ✅ Example Query 3: Find user bookings with property details
 🔍 Before Indexing
-
+```sql
 EXPLAIN ANALYZE
 SELECT u.name, p.title, b.booking_date
 FROM users u
 JOIN booking b ON u.user_id = b.user_id
 JOIN property p ON b.property_id = p.property_id
 WHERE u.email = 'user@example.com';
-
+```
 Result:
 
 Seq Scan on users    (cost=0.00..20.00 rows=1 width=50)
@@ -95,14 +94,14 @@ Seq Scan on booking  (cost=0.00..100.00 rows=10 width=100)
 Seq Scan on property (cost=0.00..50.00 rows=10 width=150)
 
 🚀 After Indexing
-
+```sql
 EXPLAIN ANALYZE
 SELECT u.name, p.title, b.booking_date
 FROM users u
 JOIN booking b ON u.user_id = b.user_id
 JOIN property p ON b.property_id = p.property_id
 WHERE u.email = 'user@example.com';
-
+```
 Result:
 
 Index Scan using idx_users_email on users  (cost=0.00..2.00 rows=1 width=50)
