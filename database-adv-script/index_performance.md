@@ -33,9 +33,9 @@ To optimize query performance on the `users`, `booking`, and `property` tables b
 #### 🔍 Before Indexing
 
 ```sql
-EXPLAIN ANALYZE
+### EXPLAIN ANALYZE
 SELECT * FROM booking WHERE user_id = 1;
-
+```
 ### Result:
 
 Seq Scan on booking  (cost=0.00..100.00 rows=10 width=100)
@@ -43,9 +43,10 @@ Seq Scan on booking  (cost=0.00..100.00 rows=10 width=100)
 
 🚀 After Indexing
 
+```
 EXPLAIN ANALYZE
 SELECT * FROM booking WHERE user_id = 1;
-
+```
 Result:
 
 Index Scan using idx_booking_user_id on booking  (cost=0.00..10.00 rows=10 width=100)
@@ -54,20 +55,20 @@ Index Scan using idx_booking_user_id on booking  (cost=0.00..10.00 rows=10 width
 📉 Improvement: Execution time reduced by 90%, from 100ms to 10ms.
 ✅ Example Query 2: Find properties in a specific city
 🔍 Before Indexing
-
+```
 EXPLAIN ANALYZE
 SELECT * FROM property WHERE city = 'New York';
-
+```
 Result:
 
 Seq Scan on property  (cost=0.00..50.00 rows=50 width=200)
   Filter: (city = 'New York')
 
 🚀 After Indexing
-
+```
 EXPLAIN ANALYZE
 SELECT * FROM property WHERE city = 'New York';
-
+```
 Result:
 
 Index Scan using idx_property_city on property  (cost=0.00..5.00 rows=50 width=200)
