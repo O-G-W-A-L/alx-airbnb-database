@@ -1,9 +1,9 @@
--- 1. Create ENUM types
+-- Create ENUM types
 CREATE TYPE role_enum AS ENUM ('guest', 'host', 'admin');
 CREATE TYPE booking_status_enum AS ENUM ('pending', 'confirmed', 'canceled');
 CREATE TYPE payment_method_enum AS ENUM ('credit_card', 'paypal', 'stripe');
 
--- 2. USERS table
+-- USERS table
 CREATE TABLE users (
   user_id        UUID PRIMARY KEY,
   first_name     VARCHAR(255) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE users (
   created_at     TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. PROPERTIES table
+-- PROPERTIES table
 CREATE TABLE properties (
   property_id     UUID PRIMARY KEY,
   host_id         UUID NOT NULL REFERENCES users(user_id),
@@ -27,7 +27,7 @@ CREATE TABLE properties (
   updated_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. BOOKINGS table
+-- BOOKINGS table
 CREATE TABLE bookings (
   booking_id   UUID PRIMARY KEY,
   property_id  UUID NOT NULL REFERENCES properties(property_id),
@@ -39,7 +39,7 @@ CREATE TABLE bookings (
   created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. PAYMENTS table
+-- PAYMENTS table
 CREATE TABLE payments (
   payment_id     UUID PRIMARY KEY,
   booking_id     UUID NOT NULL REFERENCES bookings(booking_id),
@@ -48,7 +48,7 @@ CREATE TABLE payments (
   payment_method payment_method_enum NOT NULL
 );
 
--- 6. REVIEWS table
+-- REVIEWS table
 CREATE TABLE reviews (
   review_id   UUID PRIMARY KEY,
   property_id UUID NOT NULL REFERENCES properties(property_id),
@@ -58,7 +58,7 @@ CREATE TABLE reviews (
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 7. MESSAGES table
+-- MESSAGES table
 CREATE TABLE messages (
   message_id   UUID PRIMARY KEY,
   sender_id    UUID NOT NULL REFERENCES users(user_id),
@@ -67,7 +67,7 @@ CREATE TABLE messages (
   sent_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 8. Indexes on foreign keys
+-- Indexes on foreign keys
 CREATE INDEX idx_properties_host_id     ON properties(host_id);
 CREATE INDEX idx_bookings_property_id   ON bookings(property_id);
 CREATE INDEX idx_bookings_user_id       ON bookings(user_id);
