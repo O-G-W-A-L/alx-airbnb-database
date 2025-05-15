@@ -7,13 +7,13 @@
 SELECT * FROM bookings WHERE start_date BETWEEN '2025-02-01' AND '2025-02-28';
 ```
 ## Execution Plan:
-
+```
     Seq Scan on bookings
 
     Planning Time: 0.323 ms
 
     Execution Time: 0.033 ms
-
+```
 ### After Partitioning by start_date
 
 Partitioned Table: booking
@@ -25,9 +25,10 @@ Index Used: booking_2025_02_start_date_idx
 SELECT * FROM booking WHERE start_date BETWEEN '2025-02-01' AND '2025-02-28';
 ```
 ## Execution Plan:
-
+```
     Bitmap Index Scan → Bitmap Heap Scan on relevant partition
 
     Planning Time: 2.398 ms
 
     Execution Time: 0.100 ms
+```
